@@ -27,7 +27,7 @@
  *
  * @global string $cp_version
  */
-$cp_version = '1.0.0-beta2+nightly.20190219';
+$cp_version = '1.0.0-rc1+nightly.20190220';
 
 /**
  * Return the ClassicPress version string.
