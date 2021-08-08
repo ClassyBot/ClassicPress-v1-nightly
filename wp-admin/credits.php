@@ -24,17 +24,17 @@ include( ABSPATH . 'wp-admin/admin-header.php' );
 <p class="about-text">
 	<?php printf(
 		/* translators: link to "business-focused CMS" article */
-		__( 'Thank you for using ClassicPress, the <a href="%s">business-focused CMS</a>.' ),
-		'https://www.classicpress.net/blog/2018/10/29/classicpress-for-business-professional-organization-websites/'
+		__( 'Thank you for using ClassicPress, the <a href="%s">CMS for Creators</a>.' ),
+		'https://link.classicpress.net/the-cms-for-creators'
 	); ?>
 	<br>
-	<?php _e( 'Powerful. Versatile. Predictable.' ); ?>
+	<?php _e( 'Stable. Secure. Instantly Familiar.' ); ?>
 </p>
 
 <div class="wp-badge"></div>
 
 <h2 class="nav-tab-wrapper wp-clearfix">
-	<a href="about.php" class="nav-tab"><?php _e( 'What&#8217;s New' ); ?></a>
+	<a href="about.php" class="nav-tab"><?php _e( 'About' ); ?></a>
 	<a href="credits.php" class="nav-tab nav-tab-active"><?php _e( 'Credits' ); ?></a>
 	<a href="freedoms.php" class="nav-tab"><?php _e( 'Freedoms' ); ?></a>
 	<a href="freedoms.php?privacy-notice" class="nav-tab"><?php _e( 'Privacy' ); ?></a>

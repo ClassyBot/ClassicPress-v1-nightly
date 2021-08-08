@@ -1,6 +1,6 @@
 {
     "name": "classicpress/classicpress",
-    "description": "The business-focused CMS. Powerful. Versatile. Predictable. Also known as the WordPress fork.",
+    "description": "The CMS for Creators. Stable. Secure. Instantly Familiar. Also known as the WordPress fork.",
     "keywords": [
         "classicpress"
     ],
@@ -17,6 +17,6 @@
         "issues": "https://github.com/ClassicPress/ClassicPress/issues"
     },
     "require": {
-        "johnpbloch/wordpress-core-installer": "1.0.2"
+        "johnpbloch/wordpress-core-installer": "2.0.0"
     }
 }
