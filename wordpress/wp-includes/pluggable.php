@@ -178,10 +178,43 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 	 *
 	 * @since WP-2.2.0
 	 *
-	 * @param array $args A compacted array of wp_mail() arguments, including the "to" email,
-	 *                    subject, message, headers, and attachments values.
+	 * @param array $args {
+	 *     Array of the `wp_mail()` arguments.
+	 *
+	 *     @type string|string[] $to          Array or comma-separated list of email addresses to send message.
+	 *     @type string          $subject     Email subject.
+	 *     @type string          $message     Message contents.
+	 *     @type string|string[] $headers     Additional headers.
+	 *     @type string|string[] $attachments Paths to files to attach.
+	 * }
 	 */
 	$atts = apply_filters( 'wp_mail', compact( 'to', 'subject', 'message', 'headers', 'attachments' ) );
+
+	/**
+	 * Filters whether to preempt sending an email.
+	 *
+	 * Returning a non-null value will short-circuit {@see wp_mail()}, returning
+	 * that value instead. A boolean return value should be used to indicate whether
+	 * the email was successfully sent.
+	 *
+	 * @since WP-5.7.0
+	 *
+	 * @param null|bool $return Short-circuit return value.
+	 * @param array     $atts {
+	 *     Array of the `wp_mail()` arguments.
+	 *
+	 *     @type string|string[] $to          Array or comma-separated list of email addresses to send message.
+	 *     @type string          $subject     Email subject.
+	 *     @type string          $message     Message contents.
+	 *     @type string|string[] $headers     Additional headers.
+	 *     @type string|string[] $attachments Paths to files to attach.
+	 * }
+	 */
+	$pre_wp_mail = apply_filters( 'pre_wp_mail', null, $atts );
+
+	if ( null !== $pre_wp_mail ) {
+		return $pre_wp_mail;
+	}
 
 	if ( isset( $atts['to'] ) ) {
 		$to = $atts['to'];
@@ -447,10 +480,13 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 	 */
 	$phpmailer->CharSet = apply_filters( 'wp_mail_charset', $charset );
 
-	// Set custom headers
-	if ( !empty( $headers ) ) {
+	// Set custom headers.
+	if ( ! empty( $headers ) ) {
 		foreach ( (array) $headers as $name => $content ) {
-			$phpmailer->addCustomHeader( sprintf( '%1$s: %2$s', $name, $content ) );
+			// Only add custom headers not added automatically by PHPMailer.
+			if ( ! in_array( $name, array( 'MIME-Version', 'X-Mailer' ) ) ) {
+				$phpmailer->addCustomHeader( sprintf( '%1$s: %2$s', $name, $content ) );
+			}
 		}
 
 		if ( false !== stripos( $content_type, 'multipart' ) && ! empty($boundary) )
@@ -1323,7 +1359,7 @@ if ( !function_exists('wp_validate_redirect') ) :
  * @return string redirect-sanitized URL
  **/
 function wp_validate_redirect($location, $default = '') {
-	$location = trim( $location, " \t\n\r\0\x08\x0B" );
+	$location = wp_sanitize_redirect( trim( $location, " \t\n\r\0\x08\x0B" ) );
 	// browsers will assume 'http' is your protocol, and will obey a redirect to a URL starting with '//'
 	if ( substr($location, 0, 2) == '//' )
 		$location = 'http:' . $location;
@@ -1904,7 +1940,7 @@ function wp_new_user_notification( $user_id, $deprecated = null, $notify = '' ) 
 	/* translators: %s: user login */
 	$message = sprintf(__('Username: %s'), $user->user_login) . "\r\n\r\n";
 	$message .= __('To set your password, visit the following address:') . "\r\n\r\n";
-	$message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
+	$message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . "\r\n\r\n";
 
 	$message .= wp_login_url() . "\r\n";
 

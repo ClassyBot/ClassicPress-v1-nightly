@@ -498,7 +498,11 @@ function get_metadata($meta_type, $object_id, $meta_key = '', $single = false) {
 
 	if ( !$meta_cache ) {
 		$meta_cache = update_meta_cache( $meta_type, array( $object_id ) );
-		$meta_cache = $meta_cache[$object_id];
+		if ( isset( $meta_cache[ $object_id ] ) ) {
+			$meta_cache = $meta_cache[ $object_id ];
+		} else {
+			$meta_cache = null;
+		}
 	}
 
 	if ( ! $meta_key ) {
@@ -923,8 +927,9 @@ function _get_meta_table($type) {
  *                               term, or user).
  * @return bool True if the key is protected, false otherwise.
  */
-function is_protected_meta( $meta_key, $meta_type = null ) {
-	$protected = ( '_' == $meta_key[0] );
+function is_protected_meta( $meta_key, $meta_type = '' ) {
+	$sanitized_key = preg_replace( "/[^\x20-\x7E\p{L}]/", '', $meta_key );
+	$protected     = strlen( $sanitized_key ) > 0 && ( '_' === $sanitized_key[0] );
 
 	/**
 	 * Filters whether a meta key is protected.
