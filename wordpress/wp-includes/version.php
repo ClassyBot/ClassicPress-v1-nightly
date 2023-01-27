@@ -27,7 +27,7 @@
  *
  * @global string $cp_version
  */
-$cp_version = '1.5.1+migration.20230125';
+$cp_version = '1.5.1+migration.20230126';
 
 /**
  * The WordPress version string
